@@ -1,0 +1,316 @@
+import { useState } from 'react';
+import { ArrowLeft, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import imgLogo from "figma:asset/6c97523942fe730fbd4ae098955eb28b9f9eefad.png";
+
+interface BloodBankRegisterProps {
+  onBack: () => void;
+  onRegisterSuccess: () => void;
+}
+
+export function BloodBankRegister({ onBack, onRegisterSuccess }: BloodBankRegisterProps) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    address: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Name validation
+    if (!formData.name) {
+      newErrors.name = 'Blood bank name is required';
+    } else if (formData.name.length < 3) {
+      newErrors.name = 'Blood bank name must be at least 3 characters';
+    }
+
+    // Email validation
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Address validation
+    if (!formData.address) {
+      newErrors.address = 'Address is required';
+    } else if (formData.address.length < 10) {
+      newErrors.address = 'Please enter a complete address';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+      // Redirect to login page
+      onRegisterSuccess();
+    }, 1500);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error for this field when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0e0e10] flex items-center justify-center p-6">
+      {/* Back Button */}
+      <button
+        onClick={onBack}
+        className="fixed top-8 left-8 flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
+      >
+        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm">Back to Login</span>
+      </button>
+
+      {/* Register Card */}
+      <div className="w-full max-w-[440px]">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-3 mb-12">
+          <img alt="BloodSync" src={imgLogo} className="w-12 h-12" />
+          <div className="flex flex-col leading-none">
+            <span className="text-white tracking-wide text-lg">BLOOD</span>
+            <span className="text-[#f00a0a] tracking-wide text-lg">SYNC</span>
+          </div>
+        </div>
+
+        {/* Register Form Card */}
+        <div className="bg-[#171717] border border-white/10 rounded-lg p-10">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-white text-3xl mb-2">Create Blood Bank Account</h1>
+            <p className="text-[#a3a3a3] text-sm">Register your blood bank to coordinate blood supply</p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name Input */}
+            <div>
+              <label htmlFor="name" className="block text-white text-sm mb-2">
+                Blood Bank Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                placeholder="Enter blood bank name"
+                className={`w-full bg-[#0e0e10] border rounded px-4 py-3 text-white placeholder:text-white/30 focus:outline-none transition-colors ${
+                  errors.name 
+                    ? 'border-red-500 focus:border-red-500' 
+                    : 'border-white/10 focus:border-[#dc2626]'
+                }`}
+              />
+              {errors.name && (
+                <p className="text-red-400 text-xs mt-1">{errors.name}</p>
+              )}
+            </div>
+
+            {/* Email Input */}
+            <div>
+              <label htmlFor="email" className="block text-white text-sm mb-2">
+                Email ID
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                placeholder="Enter email address"
+                className={`w-full bg-[#0e0e10] border rounded px-4 py-3 text-white placeholder:text-white/30 focus:outline-none transition-colors ${
+                  errors.email 
+                    ? 'border-red-500 focus:border-red-500' 
+                    : 'border-white/10 focus:border-[#dc2626]'
+                }`}
+              />
+              {errors.email && (
+                <p className="text-red-400 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Address Input */}
+            <div>
+              <label htmlFor="address" className="block text-white text-sm mb-2">
+                Address
+              </label>
+              <textarea
+                id="address"
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                placeholder="Enter complete blood bank address"
+                rows={3}
+                className={`w-full bg-[#0e0e10] border rounded px-4 py-3 text-white placeholder:text-white/30 focus:outline-none transition-colors resize-none ${
+                  errors.address 
+                    ? 'border-red-500 focus:border-red-500' 
+                    : 'border-white/10 focus:border-[#dc2626]'
+                }`}
+              />
+              {errors.address && (
+                <p className="text-red-400 text-xs mt-1">{errors.address}</p>
+              )}
+            </div>
+
+            {/* Password Input */}
+            <div>
+              <label htmlFor="password" className="block text-white text-sm mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="Enter password (min 6 characters)"
+                  className={`w-full bg-[#0e0e10] border rounded px-4 py-3 text-white placeholder:text-white/30 focus:outline-none transition-colors pr-12 ${
+                    errors.password 
+                      ? 'border-red-500 focus:border-red-500' 
+                      : 'border-white/10 focus:border-[#dc2626]'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60 transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-red-400 text-xs mt-1">{errors.password}</p>
+              )}
+            </div>
+
+            {/* Confirm Password Input */}
+            <div>
+              <label htmlFor="confirmPassword" className="block text-white text-sm mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                  placeholder="Re-enter your password"
+                  className={`w-full bg-[#0e0e10] border rounded px-4 py-3 text-white placeholder:text-white/30 focus:outline-none transition-colors pr-12 ${
+                    errors.confirmPassword 
+                      ? 'border-red-500 focus:border-red-500' 
+                      : 'border-white/10 focus:border-[#dc2626]'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60 transition-colors"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="text-red-400 text-xs mt-1">{errors.confirmPassword}</p>
+              )}
+              {formData.password && formData.confirmPassword && formData.password === formData.confirmPassword && (
+                <div className="flex items-center gap-1 mt-1">
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <p className="text-green-500 text-xs">Passwords match</p>
+                </div>
+              )}
+            </div>
+
+            {/* Register Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#dc2626] hover:bg-[#b91c1c] text-white py-3 rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Creating account...
+                </span>
+              ) : (
+                'Create Account'
+              )}
+            </button>
+          </form>
+
+          {/* Login Link */}
+          <div className="mt-6 text-center">
+            <span className="text-[#a3a3a3] text-sm">Already have an account? </span>
+            <button
+              type="button"
+              onClick={onBack}
+              className="text-[#dc2626] hover:text-[#b91c1c] text-sm transition-colors font-medium"
+            >
+              Login
+            </button>
+          </div>
+        </div>
+
+        {/* Help Text */}
+        <p className="text-center text-white/40 text-xs mt-8">
+          By creating an account, you agree to our Terms of Service and Privacy Policy
+        </p>
+      </div>
+    </div>
+  );
+}

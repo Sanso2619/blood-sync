@@ -7,6 +7,7 @@ interface LoginScreenProps {
   role: UserRole;
   onBack: () => void;
   onLoginSuccess: () => void;
+  onShowRegister?: () => void;
 }
 
 const roleConfig = {
@@ -24,7 +25,7 @@ const roleConfig = {
   },
 };
 
-export function LoginScreen({ role, onBack, onLoginSuccess }: LoginScreenProps) {
+export function LoginScreen({ role, onBack, onLoginSuccess, onShowRegister }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -96,17 +97,21 @@ export function LoginScreen({ role, onBack, onLoginSuccess }: LoginScreenProps) 
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email Input */}
+            {/* Email/Phone/ID Input */}
             <div>
               <label htmlFor="email" className="block text-white text-sm mb-2">
-                Email or Phone
+                {role === 'donor' ? 'Phone Number' : 'ID'}
               </label>
               <input
                 id="email"
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email or phone number"
+                placeholder={
+                  role === 'donor' 
+                    ? 'Enter your phone number' 
+                    : 'Enter your ID'
+                }
                 className="w-full bg-[#0e0e10] border border-white/10 rounded px-4 py-3 text-white placeholder:text-white/30 focus:border-[#dc2626] focus:outline-none transition-colors"
                 required
               />
@@ -189,6 +194,12 @@ export function LoginScreen({ role, onBack, onLoginSuccess }: LoginScreenProps) 
             <button
               type="button"
               className="text-[#dc2626] hover:text-[#b91c1c] text-sm transition-colors font-medium"
+              onClick={() => {
+                // Functional for all roles now
+                if (onShowRegister) {
+                  onShowRegister();
+                }
+              }}
             >
               Create account
             </button>
