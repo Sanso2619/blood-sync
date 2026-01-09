@@ -35,10 +35,6 @@ const roleConfig = {
     title: 'Donor Portal',
     navItems: [
       { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-      { id: 'donations', label: 'My Donations', icon: <Activity className="w-5 h-5" /> },
-      { id: 'blood-banks', label: 'Find Blood Banks', icon: <Map className="w-5 h-5" /> },
-      { id: 'drives', label: 'Donation Drives', icon: <AlertCircle className="w-5 h-5" /> },
-      { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
     ],
   },
   'blood-bank': {
@@ -125,7 +121,6 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
             className="w-full flex items-center gap-3 px-4 py-3 text-[#a3a3a3] hover:text-white hover:bg-white/5 rounded-lg"
           >
             <LogOut className="w-5 h-5" />
-            <span className="text-sm">Logout</span>
           </button>
         </div>
       </aside>

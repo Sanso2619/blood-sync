@@ -128,7 +128,51 @@ export function HospitalDashboard() {
 
       
 
-      
+        {/* Nearby Blood Banks */}
+        <div className="lg:col-span-2 bg-[#171717] border border-white/10 rounded-lg p-6">
+          <h2 className="text-white mb-6">Nearby Blood Banks</h2>
+          <div className="space-y-4">
+            <BloodBankCard
+              name="City Blood Bank"
+              distance="2.3 km"
+              availability={{
+                'O-': 18,
+                'A+': 76,
+                'B+': 58,
+                'AB-': 9,
+              }}
+              responseTime="4 min avg"
+              status="Available"
+            />
+            <BloodBankCard
+              name="Apollo Blood Services"
+              distance="4.1 km"
+              availability={{
+                'O+': 94,
+                'A-': 32,
+                'B-': 12,
+                'AB+': 45,
+              }}
+              responseTime="6 min avg"
+              status="Available"
+            />
+            <BloodBankCard
+              name="Max Blood Center"
+              distance="1.8 km"
+              availability={{
+                'O-': 22,
+                'A+': 68,
+                'B+': 41,
+                'AB-': 15,
+              }}
+              responseTime="3 min avg"
+              status="Available"
+            />
+          </div>
+          <button className="w-full mt-4 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+            View All on Map
+          </button>
+        </div>
 
       
 
