@@ -1,3 +1,4 @@
+import React from 'react';
 import { AlertTriangle, Users, ClipboardCheck, Check, X, Clock, MapPin, Truck, Plus, AlertOctagon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -24,47 +25,25 @@ export function HospitalDashboard() {
             <span>Emergency alert sent to all nearby blood banks!</span>
           </div>
         </div>
-      )}
-
-      {/* Create Blood Request - Prominent CTA */}
-      <div className="bg-gradient-to-r from-[#dc2626] to-[#b91c1c] border border-[#dc2626] rounded-lg p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-white text-xl mb-2">Emergency Blood Request</h2>
-            <p className="text-white/90 text-sm">
-              Create a new blood request for critical patient care
-            </p>
-          </div>
-          <button 
-            onClick={handleCreateRequest}
-            className="bg-white hover:bg-white/90 text-[#dc2626] px-6 py-3 rounded-lg flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
-          >
-            <Plus className="w-5 h-5" />
-            Create Request
-          </button>
-        </div>
-      </div>
+      )}            
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           title="Active Requests"
           value="12"
-          subtitle="+3 in last hour"
           icon={<AlertTriangle className="w-6 h-6" />}
           variant="critical"
         />
         <StatCard
           title="Pending Approval"
           value="5"
-          subtitle="Awaiting blood bank response"
           icon={<ClipboardCheck className="w-6 h-6" />}
           variant="warning"
         />
         <StatCard
           title="Fulfilled Today"
           value="18"
-          subtitle="Blood units received"
           icon={<Check className="w-6 h-6" />}
           variant="success"
         />
@@ -108,7 +87,7 @@ export function HospitalDashboard() {
                 units="2"
                 urgency="High"
                 bloodBank="Apollo Blood Services"
-                status="In Transit"
+                status="Pending"
                 urgencyLevel="high"
                 statusType="pending"
               />
@@ -147,115 +126,12 @@ export function HospitalDashboard() {
         </div>
       </div>
 
-      {/* Emergency Mode Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Emergency/Panic Mode */}
-        <div className="bg-[#171717] border border-[#dc2626] rounded-lg p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertOctagon className="w-6 h-6 text-[#dc2626]" />
-            <h2 className="text-white">Emergency Mode</h2>
-          </div>
-          <p className="text-[#a3a3a3] text-sm mb-6">
-            Activate panic mode to send urgent alerts to all nearby blood banks
-          </p>
-          <div className="space-y-3 mb-6">
-            <div>
-              <label className="text-[#a3a3a3] text-xs mb-2 block">Blood Group</label>
-              <select className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white text-sm">
-                <option>O-</option>
-                <option>O+</option>
-                <option>A-</option>
-                <option>A+</option>
-                <option>B-</option>
-                <option>B+</option>
-                <option>AB-</option>
-                <option>AB+</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-[#a3a3a3] text-xs mb-2 block">Units Needed</label>
-              <input
-                type="number"
-                className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
-                placeholder="Enter units"
-              />
-            </div>
-            <div>
-              <label className="text-[#a3a3a3] text-xs mb-2 block">Patient Case</label>
-              <select className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white text-sm">
-                <option>Emergency Surgery</option>
-                <option>Severe Trauma</option>
-                <option>ICU Critical</option>
-                <option>Blood Loss</option>
-                <option>Post-Operative</option>
-              </select>
-            </div>
-          </div>
-          <button
-            onClick={handleActivatePanicMode}
-            className="w-full bg-[#dc2626] hover:bg-[#b91c1c] text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
-          >
-            <AlertOctagon className="w-5 h-5" />
-            Activate Panic Mode
-          </button>
-        </div>
-
-        {/* Nearby Blood Banks */}
-        <div className="lg:col-span-2 bg-[#171717] border border-white/10 rounded-lg p-6">
-          <h2 className="text-white mb-6">Nearby Blood Banks</h2>
-          <div className="space-y-4">
-            <BloodBankCard
-              name="City Blood Bank"
-              distance="2.3 km"
-              availability={{
-                'O-': 18,
-                'A+': 76,
-                'B+': 58,
-                'AB-': 9,
-              }}
-              responseTime="4 min avg"
-              status="Available"
-            />
-            <BloodBankCard
-              name="Apollo Blood Services"
-              distance="4.1 km"
-              availability={{
-                'O+': 94,
-                'A-': 32,
-                'B-': 12,
-                'AB+': 45,
-              }}
-              responseTime="6 min avg"
-              status="Available"
-            />
-            <BloodBankCard
-              name="Max Blood Center"
-              distance="1.8 km"
-              availability={{
-                'O-': 22,
-                'A+': 68,
-                'B+': 41,
-                'AB-': 15,
-              }}
-              responseTime="3 min avg"
-              status="Available"
-            />
-          </div>
-          <button className="w-full mt-4 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-            View All on Map
-          </button>
-        </div>
-      </div>
+      
 
       
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <QuickStat label="Today's Requests" value="24" />
-        <QuickStat label="Approved" value="18" />
-        <QuickStat label="Pending" value="5" />
-        <QuickStat label="Avg Response Time" value="5.8 min" />
-      </div>
+      
+
 
       {/* Upcoming Donation Drives */}
       <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
@@ -371,12 +247,11 @@ export function HospitalDashboard() {
 interface StatCardProps {
   title: string;
   value: string;
-  subtitle: string;
   icon: React.ReactNode;
   variant: 'critical' | 'warning' | 'success';
 }
 
-function StatCard({ title, value, subtitle, icon, variant }: StatCardProps) {
+function StatCard({ title, value, icon, variant }: StatCardProps) {
   const variantStyles = {
     critical: 'border-[#dc2626] bg-[#dc2626]/5',
     warning: 'border-orange-700 bg-orange-900/10',
@@ -396,7 +271,7 @@ function StatCard({ title, value, subtitle, icon, variant }: StatCardProps) {
         <div className={iconStyles[variant]}>{icon}</div>
       </div>
       <div className="text-white text-3xl mb-1">{value}</div>
-      <div className="text-[#a3a3a3] text-sm">{subtitle}</div>
+      
     </div>
   );
 }
@@ -408,7 +283,6 @@ interface RequestRowProps {
   urgency: string;
   bloodBank: string;
   status: string;
-  eta: string;
   urgencyLevel: 'critical' | 'high' | 'normal';
   statusType: 'approved' | 'transit' | 'pending';
 }
@@ -420,7 +294,6 @@ function RequestRow({
   urgency,
   bloodBank,
   status,
-  eta,
   urgencyLevel,
   statusType,
 }: RequestRowProps) {
@@ -460,9 +333,6 @@ function RequestRow({
           {status}
         </div>
       </td>
-      <td className="px-6 py-4">
-        <div className="text-[#a3a3a3] text-sm">{eta}</div>
-      </td>
     </tr>
   );
 }
@@ -472,7 +342,8 @@ interface BloodBankCardProps {
   distance: string;
   availability: { [key: string]: number };
   responseTime: string;
-  status: string;
+  status: 'Available' | 'Unavailable';
+
 }
 
 function BloodBankCard({
@@ -546,7 +417,6 @@ interface CoordinationCardProps {
   bloodGroup: string;
   bloodBank: string;
   distance: string;
-  estimatedTime: string;
   status: string;
   statusVariant: 'success' | 'warning';
 }
@@ -556,7 +426,6 @@ function CoordinationCard({
   bloodGroup,
   bloodBank,
   distance,
-  estimatedTime,
   status,
   statusVariant,
 }: CoordinationCardProps) {
@@ -588,7 +457,6 @@ function CoordinationCard({
         </div>
         <div className="flex items-center gap-2 text-[#a3a3a3] text-sm">
           <Clock className="w-4 h-4" />
-          <span>ETA {estimatedTime}</span>
         </div>
       </div>
 
