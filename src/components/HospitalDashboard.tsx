@@ -89,7 +89,6 @@ export function HospitalDashboard() {
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Urgency</th>
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Blood Bank</th>
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Status</th>
-                <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">ETA</th>
               </tr>
             </thead>
             <tbody>
@@ -100,7 +99,6 @@ export function HospitalDashboard() {
                 urgency="Critical"
                 bloodBank="City Blood Bank"
                 status="Approved"
-                eta="12 min"
                 urgencyLevel="critical"
                 statusType="approved"
               />
@@ -111,9 +109,8 @@ export function HospitalDashboard() {
                 urgency="High"
                 bloodBank="Apollo Blood Services"
                 status="In Transit"
-                eta="18 min"
                 urgencyLevel="high"
-                statusType="transit"
+                statusType="pending"
               />
               <RequestRow
                 requestId="REQ-2845"
@@ -122,7 +119,6 @@ export function HospitalDashboard() {
                 urgency="Critical"
                 bloodBank="Max Blood Center"
                 status="Pending"
-                eta="—"
                 urgencyLevel="critical"
                 statusType="pending"
               />
@@ -133,7 +129,6 @@ export function HospitalDashboard() {
                 urgency="High"
                 bloodBank="Red Cross Blood Center"
                 status="Approved"
-                eta="8 min"
                 urgencyLevel="high"
                 statusType="approved"
               />
@@ -144,7 +139,6 @@ export function HospitalDashboard() {
                 urgency="Normal"
                 bloodBank="City Blood Bank"
                 status="Pending"
-                eta="—"
                 urgencyLevel="normal"
                 statusType="pending"
               />
@@ -253,40 +247,7 @@ export function HospitalDashboard() {
         </div>
       </div>
 
-      {/* Active Coordination */}
-      <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
-        <h2 className="text-white mb-6">Active Coordination</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CoordinationCard
-            requestId="REQ-2847"
-            bloodGroup="O-"
-            bloodBank="City Blood Bank"
-            distance="2.3 km"
-            estimatedTime="12 min"
-            status="In Transit"
-            statusVariant="success"
-          />
-          <CoordinationCard
-            requestId="REQ-2846"
-            bloodGroup="A+"
-            bloodBank="Apollo Blood Services"
-            distance="4.1 km"
-            estimatedTime="18 min"
-            status="Preparing"
-            statusVariant="warning"
-          />
-          <CoordinationCard
-            requestId="REQ-2843"
-            bloodGroup="AB+"
-            bloodBank="Max Blood Center"
-            distance="1.8 km"
-            estimatedTime="8 min"
-            status="Ready for Pickup"
-            statusVariant="success"
-          />
-        </div>
-      </div>
+      
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
