@@ -57,10 +57,6 @@ const roleConfig = {
     title: 'Hospital Portal',
     navItems: [
       { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-      { id: 'emergency', label: 'Emergency Requests', icon: <AlertCircle className="w-5 h-5" />, badge: '2' },
-      { id: 'map', label: 'Blood Bank Map', icon: <Map className="w-5 h-5" /> },
-      { id: 'activity', label: 'Activity Log', icon: <Activity className="w-5 h-5" /> },
-      { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
     ],
   },
 };
