@@ -29,6 +29,16 @@ export function DonorDashboard() {
         </div>
       )}
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* LEFT COLUMN */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Donor Profile */}
+          <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
+            <h2 className="text-white mb-6">Donor Profile</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <ProfileField label="User ID" value="123456" />
+              <ProfileField label="Blood Group" value="A+" highlight />
+              <ProfileField label="Location" value="Sector 21, Delhi" />
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* LEFT COLUMN */}
