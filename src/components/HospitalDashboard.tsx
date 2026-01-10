@@ -36,12 +36,6 @@ export function HospitalDashboard() {
           variant="critical"
         />
         <StatCard
-          title="Pending Approval"
-          value="5"
-          icon={<ClipboardCheck className="w-6 h-6" />}
-          variant="warning"
-        />
-        <StatCard
           title="Fulfilled Today"
           value="18"
           icon={<Check className="w-6 h-6" />}
@@ -65,7 +59,6 @@ export function HospitalDashboard() {
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Request ID</th>
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Blood Group</th>
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Units</th>
-                <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Urgency</th>
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Blood Bank</th>
                 <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">Status</th>
               </tr>
@@ -75,50 +68,40 @@ export function HospitalDashboard() {
                 requestId="REQ-2847"
                 bloodGroup="O-"
                 units="3"
-                urgency="Critical"
                 bloodBank="City Blood Bank"
                 status="Approved"
-                urgencyLevel="critical"
                 statusType="approved"
               />
               <RequestRow
                 requestId="REQ-2846"
                 bloodGroup="A+"
                 units="2"
-                urgency="High"
                 bloodBank="Apollo Blood Services"
                 status="Pending"
-                urgencyLevel="high"
                 statusType="pending"
               />
               <RequestRow
                 requestId="REQ-2845"
                 bloodGroup="B+"
                 units="4"
-                urgency="Critical"
                 bloodBank="Max Blood Center"
                 status="Pending"
-                urgencyLevel="critical"
                 statusType="pending"
               />
               <RequestRow
                 requestId="REQ-2843"
                 bloodGroup="AB+"
                 units="2"
-                urgency="High"
                 bloodBank="Red Cross Blood Center"
                 status="Approved"
-                urgencyLevel="high"
                 statusType="approved"
               />
               <RequestRow
                 requestId="REQ-2841"
                 bloodGroup="A-"
                 units="1"
-                urgency="Normal"
                 bloodBank="City Blood Bank"
                 status="Pending"
-                urgencyLevel="normal"
                 statusType="pending"
               />
             </tbody>
@@ -128,73 +111,7 @@ export function HospitalDashboard() {
 
       
 
-        {/* Nearby Blood Banks */}
-        <div className="lg:col-span-2 bg-[#171717] border border-white/10 rounded-lg p-6">
-          <h2 className="text-white mb-6">Nearby Blood Banks</h2>
-          <div className="space-y-4">
-            <BloodBankCard
-              name="City Blood Bank"
-              distance="2.3 km"
-              availability={{
-                'O-': 18,
-                'A+': 76,
-                'B+': 58,
-                'AB-': 9,
-              }}
-              responseTime="4 min avg"
-              status="Available"
-            />
-            <BloodBankCard
-              name="Apollo Blood Services"
-              distance="4.1 km"
-              availability={{
-                'O+': 94,
-                'A-': 32,
-                'B-': 12,
-                'AB+': 45,
-              }}
-              responseTime="6 min avg"
-              status="Available"
-            />
-            <BloodBankCard
-              name="Max Blood Center"
-              distance="1.8 km"
-              availability={{
-                'O-': 22,
-                'A+': 68,
-                'B+': 41,
-                'AB-': 15,
-              }}
-              responseTime="3 min avg"
-              status="Available"
-            />
-          </div>
-          <button className="w-full mt-4 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-            View All on Map
-          </button>
-        </div>
-
-      
-
-
-      {/* Upcoming Donation Drives */}
-      <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
-        <h2 className="text-white mb-6">Blood Donation Drives</h2>
-        <div className="space-y-4">
-          <DriveItem
-            title="Community Blood Drive"
-            location="Sector 21 Community Center"
-            date="Jan 10, 2026"
-            time="9:00 AM - 5:00 PM"
-          />
-          <DriveItem
-            title="Corporate Donation Camp"
-            location="Tech Park, Phase 2"
-            date="Jan 15, 2026"
-            time="10:00 AM - 4:00 PM"
-          />
-        </div>
-      </div>
+        
 
       {/* Create Request Modal */}
       {showCreateRequestModal && (
@@ -324,10 +241,8 @@ interface RequestRowProps {
   requestId: string;
   bloodGroup: string;
   units: string;
-  urgency: string;
   bloodBank: string;
   status: string;
-  urgencyLevel: 'critical' | 'high' | 'normal';
   statusType: 'approved' | 'transit' | 'pending';
 }
 
@@ -335,17 +250,11 @@ function RequestRow({
   requestId,
   bloodGroup,
   units,
-  urgency,
   bloodBank,
   status,
-  urgencyLevel,
   statusType,
 }: RequestRowProps) {
-  const urgencyColors = {
-    critical: 'bg-[#dc2626] text-white',
-    high: 'bg-orange-900/30 text-orange-400 border border-orange-800',
-    normal: 'bg-white/5 text-[#a3a3a3] border border-white/10',
-  };
+  
 
   const statusColors = {
     approved: 'bg-green-900/30 text-green-400',
@@ -364,11 +273,7 @@ function RequestRow({
       <td className="px-6 py-4">
         <div className="text-white text-sm">{units} units</div>
       </td>
-      <td className="px-6 py-4">
-        <span className={`text-xs px-3 py-1 rounded-full ${urgencyColors[urgencyLevel]}`}>
-          {urgency}
-        </span>
-      </td>
+      
       <td className="px-6 py-4">
         <div className="text-[#a3a3a3] text-sm">{bloodBank}</div>
       </td>
