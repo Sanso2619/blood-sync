@@ -17,7 +17,7 @@ export function BloodBankDashboard() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
 
-      {/* POPUP SUCCESS */}
+      {/* SUCCESS POPUP */}
       {showScheduleSuccess && (
         <div className="fixed top-24 right-8 bg-green-900/90 border border-green-700 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
           <div className="flex items-center gap-3">
@@ -32,81 +32,36 @@ export function BloodBankDashboard() {
         </div>
       )}
 
-      {/* STATS (Requests Granted Today REMOVED) */}
+      {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatCard
           title="Available Blood Units"
           value="482"
           subtitle="Across all blood groups"
           icon={<Package className="w-6 h-6" />}
-          variant="neutral"
+          variant="normal"
         />
+
         <StatCard
           title="Hospital Requests Pending"
           value="8"
           subtitle="Awaiting response"
           icon={<AlertCircle className="w-6 h-6" />}
-          variant="warning"
+          variant="danger"
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* BOOTSTRAP SIDE-BY-SIDE SECTIONS */}
+      <div className="row g-4">
 
-        {/* LEFT COLUMN */}
-        <div className="lg:col-span-2 space-y-6">
-
-          {/* BLOOD INVENTORY */}
-          <div className="bg-[#171717] border border-white/10 rounded-lg overflow-hidden">
-            <div className="p-6 border-b border-white/10">
-              <h2 className="text-white">Blood Inventory</h2>
-              <p className="text-[#a3a3a3] text-sm mt-1">
-                Blood group-wise availability
-              </p>
-            </div>
-
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">
-                    Blood Group
-                  </th>
-                  <th className="text-left text-[#a3a3a3] text-sm px-6 py-4">
-                    Units Available
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {["O+","O-","A+","A-","B+","B-","AB+","AB-"].map((group) => (
-                  <tr
-                    key={group}
-                    className="border-b border-white/5 hover:bg-white/5"
-                  >
-                    <td className="px-6 py-4 text-white">{group}</td>
-                    <td className="px-6 py-4 text-[#a3a3a3] italic">
-                      -- enter units --
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* PLATELET INVENTORY (TEXT ONLY) */}
-          <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
-            <h2 className="text-white mb-2">Platelet Inventory</h2>
-            <p className="text-[#a3a3a3] text-sm">Units Available:</p>
-            <p className="text-white italic mt-1">-- enter units --</p>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="space-y-6">
-
-          {/* SCHEDULE DRIVE */}
-          <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
+        {/* LEFT */}
+        <div className="col-12 col-md-6">
+          <div className="bg-[#171717] border border-white/10 rounded-xl p-6 h-100">
             <div className="flex items-center gap-2 mb-4">
               <Calendar className="w-5 h-5 text-white/60" />
-              <h2 className="text-white">Schedule Donation Drive</h2>
+              <h2 className="text-white text-lg">
+                Schedule Donation Drive
+              </h2>
             </div>
 
             <div className="space-y-4">
@@ -117,7 +72,7 @@ export function BloodBankDashboard() {
                 <input
                   type="text"
                   placeholder="Enter drive name"
-                  className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
+                  className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
                 />
               </div>
 
@@ -127,50 +82,69 @@ export function BloodBankDashboard() {
                 </label>
                 <input
                   type="date"
-                  className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
+                  className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
                 />
               </div>
 
               <button
                 onClick={handleScheduleDrive}
-                className="w-full bg-[#dc2626] hover:bg-[#b91c1c] text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                className="w-full bg-[#dc2626] hover:bg-[#b91c1c] text-white py-2 rounded-lg font-medium"
               >
                 Schedule Drive
               </button>
             </div>
           </div>
+        </div>
 
-          {/* SCHEDULED DRIVES */}
-          <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
-            <h2 className="text-white mb-4">Scheduled Donation Drives</h2>
+        {/* RIGHT */}
+        <div className="col-12 col-md-6">
+          <div className="bg-[#171717] border border-white/10 rounded-xl p-6 h-100">
+            <h2 className="text-white text-lg mb-4">
+              Scheduled Donation Drives
+            </h2>
 
-            <DriveItem
-              title="Community Blood Drive"
-              date="Jan 10, 2026"
-              registrations="42"
-            />
-            <DriveItem
-              title="Corporate Camp - Tech Park"
-              date="Jan 15, 2026"
-              registrations="28"
-            />
+            <div className="space-y-4">
+              <DriveItem
+                title="Community Blood Drive"
+                date="Jan 10, 2026"
+                registrations="42"
+              />
+              <DriveItem
+                title="Corporate Camp - Tech Park"
+                date="Jan 15, 2026"
+                registrations="28"
+              />
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   );
 }
 
-/* ---------- COMPONENTS ---------- */
+/* ================= COMPONENTS ================= */
 
-function StatCard({ title, value, subtitle, icon, variant }: any) {
-  const styles: any = {
-    warning: "border-orange-700 bg-orange-900/10",
-    neutral: "border-white/10",
-  };
+function StatCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  variant,
+}: {
+  title: string;
+  value: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  variant: "normal" | "danger";
+}) {
+  const styles =
+    variant === "danger"
+      ? "border-red-600 bg-red-900/20"
+      : "border-white/10";
 
   return (
-    <div className={`bg-[#171717] border rounded-lg p-6 ${styles[variant]}`}>
+    <div className={`bg-[#171717] border rounded-lg p-6 ${styles}`}>
       <div className="flex justify-between mb-4 text-white">
         {title}
         {icon}
@@ -181,9 +155,17 @@ function StatCard({ title, value, subtitle, icon, variant }: any) {
   );
 }
 
-function DriveItem({ title, date, registrations }: any) {
+function DriveItem({
+  title,
+  date,
+  registrations,
+}: {
+  title: string;
+  date: string;
+  registrations: string;
+}) {
   return (
-    <div className="bg-[#0e0e10] border border-white/10 rounded-lg p-4 mb-3">
+    <div className="bg-[#0e0e10] border border-white/10 rounded-lg p-4">
       <div className="text-white">{title}</div>
       <div className="text-[#a3a3a3] text-sm">{date}</div>
       <div className="text-[#a3a3a3] text-sm">
