@@ -8,7 +8,7 @@ export function DonorDashboard() {
 
   return (
     <>
-      {/* Eligibility Modal */}
+      {/* ================= Eligibility Modal ================= */}
       <DriveEligibilityCheck
         isOpen={showEligibility}
         onClose={() => setShowEligibility(false)}
@@ -19,7 +19,7 @@ export function DonorDashboard() {
         }}
       />
 
-      {/* Success Toast */}
+      {/* ================= Success Toast ================= */}
       {showSuccess && (
         <div className="fixed top-24 right-8 bg-green-900/90 border border-green-700 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
           <div className="flex items-center gap-3">
@@ -29,29 +29,18 @@ export function DonorDashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* LEFT COLUMN */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Donor Profile */}
-          <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
-            <h2 className="text-white mb-6">Donor Profile</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <ProfileField label="User ID" value="123456" />
-              <ProfileField label="Blood Group" value="A+" highlight />
-              <ProfileField label="Location" value="Sector 21, Delhi" />
+      {/* ================= Main Grid ================= */}
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* LEFT COLUMN */}
+          {/* ================= LEFT COLUMN ================= */}
           <div className="lg:col-span-2 space-y-6">
             {/* Donor Profile */}
             <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
               <h2 className="text-white mb-6">Donor Profile</h2>
+
               <div className="grid grid-cols-2 gap-6">
+                <ProfileField label="User ID" value="123456" />
                 <ProfileField label="Blood Group" value="A+" highlight />
-                <ProfileField label="Age" value="28 years" />
-                <ProfileField label="Weight" value="72 kg" />
-                <ProfileField label="Gender" value="Male" />
-                <ProfileField label="Last Donation" value="3 months ago" />
                 <ProfileField label="Location" value="Sector 21, Delhi" />
               </div>
             </div>
@@ -59,6 +48,7 @@ export function DonorDashboard() {
             {/* Upcoming Donation Drives */}
             <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
               <h2 className="text-white mb-6">Upcoming Donation Drives</h2>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <DriveCard
                   title="Community Blood Drive"
@@ -81,14 +71,27 @@ export function DonorDashboard() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
+          {/* ================= RIGHT COLUMN ================= */}
           <div className="space-y-6">
             <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
               <h2 className="text-white mb-4">Nearby Blood Banks</h2>
+
               <div className="space-y-3">
-                <BloodBankCard name="City Blood Bank" distance="2.3 km" status="Open" />
-                <BloodBankCard name="Apollo Blood Services" distance="4.1 km" status="Open" />
-                <BloodBankCard name="Red Cross Blood Center" distance="5.8 km" status="Closed" />
+                <BloodBankCard
+                  name="City Blood Bank"
+                  distance="2.3 km"
+                  status="Open"
+                />
+                <BloodBankCard
+                  name="Apollo Blood Services"
+                  distance="4.1 km"
+                  status="Open"
+                />
+                <BloodBankCard
+                  name="Red Cross Blood Center"
+                  distance="5.8 km"
+                  status="Closed"
+                />
               </div>
             </div>
           </div>
@@ -98,7 +101,7 @@ export function DonorDashboard() {
   );
 }
 
-/* ---------- Components ---------- */
+/* ================= Reusable Components ================= */
 
 function ProfileField({
   label,
@@ -112,7 +115,13 @@ function ProfileField({
   return (
     <div>
       <div className="text-[#a3a3a3] text-xs mb-1">{label}</div>
-      <div className={`text-sm ${highlight ? 'text-[#dc2626] text-xl' : 'text-white'}`}>
+      <div
+        className={`${
+          highlight
+            ? 'text-[#dc2626] text-xl font-semibold'
+            : 'text-white text-sm'
+        }`}
+      >
         {value}
       </div>
     </div>
@@ -179,6 +188,7 @@ function BloodBankCard({
         <div className="text-white text-sm">{name}</div>
         <div className="text-[#a3a3a3] text-xs">{distance}</div>
       </div>
+
       <span
         className={`text-xs px-2 py-1 rounded-full ${
           status === 'Open'
