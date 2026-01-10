@@ -15,6 +15,7 @@ import { DonorDashboard } from './DonorDashboard';
 import { HospitalDashboard } from './HospitalDashboard';
 import { BloodBankDashboard } from './BloodBankDashboard';
 import { BloodBankInventories } from './BloodBankInventories';
+import { HospitalRequests } from './HospitalRequests';
 
 interface DashboardProps {
   role: UserRole;
@@ -48,6 +49,11 @@ const roleConfig: Record<string, { title: string; navItems: NavItem[] }> = {
         id: 'dashboard',
         label: 'Dashboard',
         icon: <LayoutDashboard className="w-5 h-5" />,
+      },
+      {
+        id: 'requests',
+        label: 'Requests',
+        icon: <AlertCircle className="w-5 h-5" />,
       },
     ],
   },
@@ -86,7 +92,10 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
     if (children) return children;
 
     if (role === 'donor') return <DonorDashboard />;
-    if (role === 'hospital') return <HospitalDashboard />;
+    if (role === 'hospital') {
+      if (activeNav === 'requests') return <HospitalRequests />;
+      return <HospitalDashboard />;
+    }
 
     if (role === 'blood-bank') {
       if (activeNav === 'inventories') return <BloodBankInventories />;
