@@ -2,20 +2,16 @@ import { useState, ReactNode } from 'react';
 import {
   LayoutDashboard,
   AlertCircle,
-  Map,
-  Activity,
-  Settings,
-  Search,
-  Bell,
-  User,
-  ChevronRight,
+  Boxes,
   LogOut,
 } from 'lucide-react';
 import { UserRole } from '../App';
 import imgLogo from 'figma:asset/6c97523942fe730fbd4ae098955eb28b9f9eefad.png';
+
 import { DonorDashboard } from './DonorDashboard';
 import { HospitalDashboard } from './HospitalDashboard';
 import { BloodBankDashboard } from './BloodBankDashboard';
+import { BloodBankInventories } from './BloodBankInventories';
 
 interface DashboardProps {
   role: UserRole;
@@ -37,10 +33,12 @@ const roleConfig = {
       { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     ],
   },
+
   'blood-bank': {
     title: 'Blood Bank Portal',
     navItems: [
       { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+      { id: 'inventories', label: 'Inventories', icon: <Boxes className="w-5 h-5" /> },
       {
         id: 'active-requests',
         label: 'Active Requests',
@@ -49,6 +47,7 @@ const roleConfig = {
       },
     ],
   },
+
   hospital: {
     title: 'Hospital Portal',
     navItems: [
@@ -59,7 +58,6 @@ const roleConfig = {
 
 export function Dashboard({ role, onLogout, children }: DashboardProps) {
   const [activeNav, setActiveNav] = useState('dashboard');
-  const [searchQuery, setSearchQuery] = useState('');
 
   if (!role) return null;
   const config = roleConfig[role];
@@ -69,10 +67,13 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
 
     if (role === 'donor') return <DonorDashboard />;
     if (role === 'hospital') return <HospitalDashboard />;
+
     if (role === 'blood-bank') {
+      if (activeNav === 'inventories') return <BloodBankInventories />;
       if (activeNav === 'active-requests') return <BloodBankActiveRequests />;
       return <BloodBankDashboard />;
     }
+
     return null;
   };
 
@@ -95,19 +96,17 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
             <button
               key={item.id}
               onClick={() => setActiveNav(item.id)}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-lg
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg
                 ${
                   activeNav === item.id
                     ? 'bg-[#dc2626] text-white'
                     : 'text-[#a3a3a3] hover:bg-white/5 hover:text-white'
                 }`}
             >
-              <div className="flex items-center gap-3">
-                {item.icon}
-                <span className="text-sm">{item.label}</span>
-              </div>
+              {item.icon}
+              <span className="text-sm">{item.label}</span>
               {item.badge && (
-                <span className="bg-[#dc2626] text-white text-xs px-2 py-0.5 rounded-full">
+                <span className="ml-auto bg-[#dc2626] text-white text-xs px-2 py-0.5 rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -121,33 +120,13 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
             className="w-full flex items-center gap-3 px-4 py-3 text-[#a3a3a3] hover:text-white hover:bg-white/5 rounded-lg"
           >
             <LogOut className="w-5 h-5" />
+            Logout
           </button>
         </div>
       </aside>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-[#171717] border-b border-white/10 px-8 py-4 flex justify-between">
-          <div>
-            <h1 className="text-white text-xl">{config.title}</h1>
-            <div className="text-sm text-[#a3a3a3] mt-1">
-              Dashboard &gt; Overview
-            </div>
-          </div>
-
-          {role !== 'blood-bank' && (
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
-              className="bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
-            />
-          )}
-        </header>
-
-        <main className="flex-1 p-8 overflow-auto">{renderContent()}</main>
-      </div>
+      <div className="flex-1 p-8 overflow-auto">{renderContent()}</div>
     </div>
   );
 }
@@ -218,17 +197,16 @@ function ActiveRequestCard({
         <div>Requested: {time}</div>
       </div>
 
-      {/* 🔥 FORCED COLORS */}
       <div className="flex gap-3">
         <button
           onClick={() => onAction(id)}
-          className="flex-1 bg-green-500 hover:bg-green-600 border border-green-600 text-white py-2 rounded-lg font-medium"
+          className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium"
         >
           Accept
         </button>
         <button
           onClick={() => onAction(id)}
-          className="flex-1 bg-red-500 hover:bg-red-600 border border-red-600 text-white py-2 rounded-lg font-medium"
+          className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium"
         >
           Decline
         </button>
