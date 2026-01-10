@@ -35,6 +35,7 @@ export function DonorDashboard() {
           <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
             <h2 className="text-white mb-6">Upcoming Donation Drives</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
               <DriveCard
                 title="Community Blood Drive"
                 location="Sector 21 Community Center"
@@ -93,6 +94,7 @@ function ProfileField({
         {value}
       </div>
     </div>
+    
   );
 }
 
@@ -127,6 +129,18 @@ function DriveCard({
         </div>
         <div className="text-[#a3a3a3] text-xs">Organized by {organizer}</div>
       </div>
+
+      {/* Eligibility Button – ONLY ADDITION */}
+        <button
+            onClick={() => {}}
+            style={{ backgroundColor: "#dc2626",borderRadius: "10px" }} // Tailwind red-600
+            className="mt-4 w-full rounded-md py-2 text-sm font-medium text-white
+                      hover:opacity-90
+                      transition-all duration-200
+                      active:scale-95"
+        >
+          Donate
+        </button>
     </div>
   );
 }
