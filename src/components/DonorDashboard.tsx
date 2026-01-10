@@ -22,11 +22,8 @@ export function DonorDashboard() {
           <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
             <h2 className="text-white mb-6">Donor Profile</h2>
             <div className="grid grid-cols-2 gap-6">
+              <ProfileField label="User ID" value="123456" />
               <ProfileField label="Blood Group" value="A+" highlight />
-              <ProfileField label="Age" value="28 years" />
-              <ProfileField label="Weight" value="72 kg" />
-              <ProfileField label="Gender" value="Male" />
-              <ProfileField label="Last Donation" value="3 months ago" />
               <ProfileField label="Location" value="Sector 21, Delhi" />
             </div>
           </div>

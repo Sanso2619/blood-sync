@@ -2,12 +2,7 @@ import { useState, ReactNode } from 'react';
 import {
   LayoutDashboard,
   AlertCircle,
-  Map,
-  Activity,
-  Settings,
-  Search,
   Bell,
-  User,
   ChevronRight,
   LogOut,
 } from 'lucide-react';
@@ -59,7 +54,7 @@ const roleConfig = {
 
 export function Dashboard({ role, onLogout, children }: DashboardProps) {
   const [activeNav, setActiveNav] = useState('dashboard');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (!role) return null;
   const config = roleConfig[role];
@@ -79,34 +74,63 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
   return (
     <div className="min-h-screen bg-[#0e0e10] flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#171717] border-r border-white/10 flex flex-col">
-        <button onClick={onLogout} className="p-6 border-b border-white/10 text-left">
-          <div className="flex items-center gap-3">
-            <img src={imgLogo} className="w-10 h-10" />
-            <div>
-              <span className="text-white">BLOOD</span>
-              <span className="text-[#dc2626]">SYNC</span>
-            </div>
-          </div>
-        </button>
+      <aside
+        className={`
+          ${isCollapsed ? 'w-16' : 'w-64'}
+          bg-[#171717] border-r border-white/10 
+          flex flex-col transition-all duration-300 ease-in-out
+          overflow-hidden
+        `}
+      >
+        {/* Logo + Collapse Toggle */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          {!isCollapsed && (
+            <a href="/" className="flex items-center gap-3">
+              <img src={imgLogo} className="w-9 h-9" alt="BloodSync Logo" />
+              <div className="font-bold tracking-tight text-lg">
+                <span className="text-white">BLOOD</span>
+                <span className="text-[#dc2626]">SYNC</span>
+              </div>
+            </a>
+          )}
 
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={`
+              p-2 rounded-lg hover:bg-white/10 text-[#a3a3a3] hover:text-white transition-colors
+              ${isCollapsed ? 'mx-auto' : ''}
+            `}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <ChevronRight
+              className={`w-6 h-6 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}
+            />
+          </button>
+        </div>
+
+        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1">
           {config.navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveNav(item.id)}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-lg
-                ${
-                  activeNav === item.id
-                    ? 'bg-[#dc2626] text-white'
-                    : 'text-[#a3a3a3] hover:bg-white/5 hover:text-white'
-                }`}
+              className={`
+                w-full flex items-center 
+                ${isCollapsed ? 'justify-center' : 'justify-between px-4'}
+                py-3 rounded-lg transition-colors
+                ${activeNav === item.id
+                  ? 'bg-[#dc2626] text-white'
+                  : 'text-[#a3a3a3] hover:bg-white/5 hover:text-white'
+                }
+              `}
+              title={isCollapsed ? item.label : undefined}
             >
-              <div className="flex items-center gap-3">
+              <div className={`flex items-center ${isCollapsed ? '' : 'gap-3'}`}>
                 {item.icon}
-                <span className="text-sm">{item.label}</span>
+                {!isCollapsed && <span className="text-sm">{item.label}</span>}
               </div>
-              {item.badge && (
+
+              {!isCollapsed && item.badge && (
                 <span className="bg-[#dc2626] text-white text-xs px-2 py-0.5 rounded-full">
                   {item.badge}
                 </span>
@@ -115,35 +139,45 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        {/* Logout at the bottom of sidebar */}
+        <div className="p-4 border-t border-white/10 mt-auto">
           <button
             onClick={onLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-[#a3a3a3] hover:text-white hover:bg-white/5 rounded-lg"
+            className={`
+              w-full flex items-center 
+              ${isCollapsed ? 'justify-center' : 'gap-3 px-4'}
+              py-3 text-[#a3a3a3] hover:text-white hover:bg-white/5 rounded-lg transition-colors
+            `}
+            title={isCollapsed ? "Logout" : undefined}
           >
             <LogOut className="w-5 h-5" />
+            {!isCollapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
 
-      {/* Main */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-[#171717] border-b border-white/10 px-8 py-4 flex justify-between">
+        <header className="bg-[#171717] border-b border-white/10 px-8 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-white text-xl">{config.title}</h1>
+            <h1 className="text-white text-xl font-semibold">{config.title}</h1>
             <div className="text-sm text-[#a3a3a3] mt-1">
               Dashboard &gt; Overview
             </div>
           </div>
 
-          {role !== 'blood-bank' && (
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
-              className="bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
-            />
-          )}
+          {/* Notification bell */}
+          <div className="relative">
+            <button
+              className="p-2 rounded-full hover:bg-white/10 text-[#a3a3a3] hover:text-white transition-colors"
+              title="Notifications"
+            >
+              <Bell className="w-6 h-6" />
+            </button>
+            <span className="absolute -top-1 -right-1 bg-[#dc2626] text-white text-[10px] font-medium rounded-full w-4 h-4 flex items-center justify-center">
+              3
+            </span>
+          </div>
         </header>
 
         <main className="flex-1 p-8 overflow-auto">{renderContent()}</main>
@@ -153,86 +187,13 @@ export function Dashboard({ role, onLogout, children }: DashboardProps) {
 }
 
 /* ============================= */
-/* BLOOD BANK – ACTIVE REQUESTS */
+/* BLOOD BANK – ACTIVE REQUESTS (placeholder) */
 /* ============================= */
 
 function BloodBankActiveRequests() {
-  const [handled, setHandled] = useState<string[]>([]);
-
-  const handleAction = (id: string) => {
-    setHandled((prev) => [...prev, id]);
-  };
-
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <h2 className="text-white text-xl">Active Blood Requests</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {!handled.includes('1') && (
-          <ActiveRequestCard
-            id="1"
-            hospital="Apollo Hospital"
-            bloodGroup="O-"
-            units="3"
-            time="5 min ago"
-            onAction={handleAction}
-          />
-        )}
-        {!handled.includes('2') && (
-          <ActiveRequestCard
-            id="2"
-            hospital="Max Healthcare"
-            bloodGroup="B+"
-            units="2"
-            time="12 min ago"
-            onAction={handleAction}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ActiveRequestCard({
-  id,
-  hospital,
-  bloodGroup,
-  units,
-  time,
-  onAction,
-}: {
-  id: string;
-  hospital: string;
-  bloodGroup: string;
-  units: string;
-  time: string;
-  onAction: (id: string) => void;
-}) {
-  return (
-    <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
-      <h3 className="text-white mb-3">{hospital}</h3>
-
-      <div className="text-[#a3a3a3] text-sm mb-4 space-y-1">
-        <div>Blood Group: <span className="text-white">{bloodGroup}</span></div>
-        <div>Units Required: <span className="text-white">{units}</span></div>
-        <div>Requested: {time}</div>
-      </div>
-
-      {/* 🔥 FORCED COLORS */}
-      <div className="flex gap-3">
-        <button
-          onClick={() => onAction(id)}
-          className="flex-1 bg-green-500 hover:bg-green-600 border border-green-600 text-white py-2 rounded-lg font-medium"
-        >
-          Accept
-        </button>
-        <button
-          onClick={() => onAction(id)}
-          className="flex-1 bg-red-500 hover:bg-red-600 border border-red-600 text-white py-2 rounded-lg font-medium"
-        >
-          Decline
-        </button>
-      </div>
+    <div className="text-white text-xl">
+      Active Blood Requests content goes here...
     </div>
   );
 }
