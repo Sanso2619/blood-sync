@@ -1,21 +1,86 @@
 import { MapPin, Calendar, Clock, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DriveEligibilityCheck } from './DriveEligibilityCheck';
 
 export function DonorDashboard() {
   const [showEligibility, setShowEligibility] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [selectedDriveId, setSelectedDriveId] = useState<string | null>(null);
+  const [donorProfile, setDonorProfile] = useState<any>(null);
+  const [drives, setDrives] = useState<any[]>([]);
+  const [bloodBanks, setBloodBanks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Load user from localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setDonorProfile(user);
+    }
+
+    // Fetch upcoming drives
+    fetch('http://localhost:5000/api/drives/upcoming')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setDrives(data.drives);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching drives:', err);
+        setLoading(false);
+      });
+
+    // For demo, show some hardcoded blood banks (can be replaced with API later)
+    setBloodBanks([
+      { name: 'City Blood Bank', distance: '2.3 km', status: 'Open' },
+      { name: 'Apollo Blood Services', distance: '4.1 km', status: 'Open' },
+      { name: 'Red Cross Blood Center', distance: '5.8 km', status: 'Closed' },
+    ]);
+  }, []);
 
   return (
     <>
       {/* ================= Eligibility Modal ================= */}
       <DriveEligibilityCheck
         isOpen={showEligibility}
-        onClose={() => setShowEligibility(false)}
-        onEligible={() => {
+        onClose={() => {
           setShowEligibility(false);
-          setShowSuccess(true);
-          setTimeout(() => setShowSuccess(false), 3000);
+          setSelectedDriveId(null);
+        }}
+        onEligible={async () => {
+          if (selectedDriveId && donorProfile) {
+            try {
+              const response = await fetch(`http://localhost:5000/api/drives/${selectedDriveId}/register`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  donorId: donorProfile.id,
+                }),
+              });
+
+              const data = await response.json();
+              if (data.success) {
+                // Refresh drives to show updated registration count
+                const drivesRes = await fetch('http://localhost:5000/api/drives/upcoming');
+                const drivesData = await drivesRes.json();
+                if (drivesData.success) {
+                  setDrives(drivesData.drives);
+                }
+                
+                setShowEligibility(false);
+                setSelectedDriveId(null);
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 3000);
+              }
+            } catch (error) {
+              console.error('Error registering for drive:', error);
+            }
+          }
         }}
       />
 
@@ -38,36 +103,44 @@ export function DonorDashboard() {
             <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
               <h2 className="text-white mb-6">Donor Profile</h2>
 
-              <div className="grid grid-cols-2 gap-6">
-                <ProfileField label="User ID" value="123456" />
-                <ProfileField label="Blood Group" value="A+" highlight />
-                <ProfileField label="Location" value="Sector 21, Delhi" />
-              </div>
+              {loading ? (
+                <div className="text-white/60">Loading...</div>
+              ) : (
+                <div className="grid grid-cols-2 gap-6">
+                  <ProfileField label="User ID" value={donorProfile?.id || 'N/A'} />
+                  <ProfileField label="Blood Group" value={donorProfile?.bloodGroup || 'Not set'} highlight />
+                  <ProfileField label="Location" value={donorProfile?.location || 'N/A'} />
+                </div>
+              )}
             </div>
 
             {/* Upcoming Donation Drives */}
             <div className="bg-[#171717] border border-white/10 rounded-lg p-6">
               <h2 className="text-white mb-6">Upcoming Donation Drives</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <DriveCard
-                  title="Community Blood Drive"
-                  location="Sector 21 Community Center"
-                  date="Jan 10, 2026"
-                  time="9:00 AM - 5:00 PM"
-                  organizer="City Blood Bank"
-                  onDonate={() => setShowEligibility(true)}
-                />
-
-                <DriveCard
-                  title="Corporate Blood Donation Camp"
-                  location="Tech Park, Phase 2"
-                  date="Jan 15, 2026"
-                  time="10:00 AM - 4:00 PM"
-                  organizer="Apollo Blood Services"
-                  onDonate={() => setShowEligibility(true)}
-                />
-              </div>
+              {loading ? (
+                <div className="text-white/60">Loading drives...</div>
+              ) : drives.length === 0 ? (
+                <div className="text-white/60">No upcoming drives available</div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {drives.map((drive) => (
+                    <DriveCard
+                      key={drive.id}
+                      title={drive.title}
+                      location={drive.location}
+                      date={new Date(drive.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      time={drive.time}
+                      organizer={drive.organizer}
+                      registrations={drive.registrations}
+                      onDonate={() => {
+                        setSelectedDriveId(drive.id);
+                        setShowEligibility(true);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -134,6 +207,7 @@ function DriveCard({
   date,
   time,
   organizer,
+  registrations,
   onDonate,
 }: {
   title: string;
@@ -141,6 +215,7 @@ function DriveCard({
   date: string;
   time: string;
   organizer: string;
+  registrations?: number;
   onDonate: () => void;
 }) {
   return (
@@ -161,6 +236,9 @@ function DriveCard({
           {time}
         </div>
         <div className="text-xs">Organized by {organizer}</div>
+        {registrations !== undefined && (
+          <div className="text-xs text-[#dc2626]">Registrations: {registrations}</div>
+        )}
       </div>
 
       <button

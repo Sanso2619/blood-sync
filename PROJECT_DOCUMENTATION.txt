@@ -1,0 +1,819 @@
+================================================================================
+                    BLOODSYNC PROJECT - COMPLETE DOCUMENTATION
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+BloodSync is a React-based blood donation management system that connects 
+donors, blood banks, and hospitals. It's a frontend-only application built 
+with React, TypeScript, Vite, and Tailwind CSS. Currently, all data is 
+hardcoded/mocked and needs backend integration.
+
+TECH STACK
+================================================================================
+- React 18.3.1
+- TypeScript
+- Vite 6.3.5
+- Tailwind CSS
+- Radix UI components
+- Lucide React icons
+
+PROJECT STRUCTURE
+================================================================================
+src/
+├── App.tsx                    # Main app router and state management
+├── main.tsx                   # React entry point
+├── components/
+│   ├── LandingPage.tsx        # Landing page with hero, features, footer
+│   ├── LoginScreen.tsx        # Login form for all roles
+│   ├── Dashboard.tsx          # Main dashboard wrapper with sidebar
+│   ├── DonorRegister.tsx      # Donor registration form
+│   ├── HospitalRegister.tsx   # Hospital registration form
+│   ├── BloodBankRegister.tsx  # Blood bank registration form
+│   ├── DonorDashboard.tsx     # Donor-specific dashboard
+│   ├── HospitalDashboard.tsx  # Hospital-specific dashboard
+│   ├── BloodBankDashboard.tsx # Blood bank dashboard
+│   ├── BloodBankInventories.tsx # Blood inventory management
+│   ├── DriveEligibilityCheck.tsx # Donor eligibility questionnaire
+│   ├── Navigation.tsx         # Navigation bar
+│   ├── HeroSection.tsx         # Hero section with logo
+│   ├── FeatureCards.tsx        # Feature showcase cards
+│   ├── HowItWorks.tsx          # How it works section
+│   └── Footer.tsx             # Footer component
+
+================================================================================
+                        APPLICATION FLOW
+================================================================================
+
+1. LANDING PAGE
+   - User sees hero section, features, and "How It Works"
+   - User selects role: Donor, Hospital, or Blood Bank
+   - Navigation to role-specific login screen
+
+2. LOGIN SCREEN
+   - Role-specific login form
+   - Accepts any credentials (hardcoded - always succeeds)
+   - Link to registration page
+   - After login: redirects to dashboard
+
+3. REGISTRATION SCREENS
+   - Donor: Phone, Pincode, Password
+   - Hospital: Name, Email, Address, Password
+   - Blood Bank: Name, Email, Address, Password
+   - All forms validate client-side only
+   - After registration: redirects to login
+
+4. DASHBOARDS
+   - Role-specific dashboards with sidebar navigation
+   - Different features per role
+   - All data is hardcoded/mocked
+
+================================================================================
+                    COMPONENT FUNCTIONALITY
+================================================================================
+
+1. APP.TSX (Main Router)
+   - Manages application state (role, login status, registration status)
+   - Routes between Landing Page, Login, Register, and Dashboard
+   - Handles role selection and navigation
+
+2. LANDING PAGE
+   - Hero section with BloodSync branding
+   - Feature cards (Emergency Mode, Location Search, Real-time Communication)
+   - "How It Works" section explaining the flow
+   - Footer with links
+
+3. LOGIN SCREEN
+   - Role-specific login forms
+   - Donor: Phone Number + Password
+   - Hospital/Blood Bank: ID + Password
+   - Password visibility toggle
+   - "Forgot Password" link (non-functional)
+   - "Create Account" link
+   - HARDCODED: Accepts any credentials, always succeeds after 1 second delay
+
+4. REGISTRATION SCREENS
+   - Client-side validation only
+   - Donor Register:
+     * Phone (10 digits)
+     * Pincode (6 digits)
+     * Password (min 6 chars)
+     * Confirm Password
+   - Hospital/Blood Bank Register:
+     * Name (min 3 chars)
+     * Email (valid email format)
+     * Address (min 10 chars)
+     * Password (min 6 chars)
+     * Confirm Password
+   - HARDCODED: Simulates API call with 1.5s delay, then redirects to login
+
+5. DASHBOARD (Wrapper)
+   - Sidebar navigation (collapsible)
+   - Role-specific navigation items
+   - Header with notifications (donor only)
+   - Logout functionality
+   - Renders role-specific dashboard content
+
+6. DONOR DASHBOARD
+   - Donor Profile Card:
+     * User ID: "123456" (HARDCODED)
+     * Blood Group: "A+" (HARDCODED)
+     * Location: "Sector 21, Delhi" (HARDCODED)
+   
+   - Upcoming Donation Drives:
+     * "Community Blood Drive"
+       - Location: "Sector 21 Community Center"
+       - Date: "Jan 10, 2026"
+       - Time: "9:00 AM - 5:00 PM"
+       - Organizer: "City Blood Bank"
+     * "Corporate Blood Donation Camp"
+       - Location: "Tech Park, Phase 2"
+       - Date: "Jan 15, 2026"
+       - Time: "10:00 AM - 4:00 PM"
+       - Organizer: "Apollo Blood Services"
+   
+   - Nearby Blood Banks:
+     * "City Blood Bank" - 2.3 km - Open
+     * "Apollo Blood Services" - 4.1 km - Open
+     * "Red Cross Blood Center" - 5.8 km - Closed
+   
+   - Features:
+     * Click "Donate" button opens eligibility check modal
+     * Eligibility check is a multi-step questionnaire
+     * After eligibility, shows success toast
+
+7. HOSPITAL DASHBOARD
+   - Stats Cards:
+     * Active Requests: "12" (HARDCODED)
+     * Pending Approval: "5" (HARDCODED)
+     * Fulfilled Today: "18" (HARDCODED)
+   
+   - My Blood Requests Table:
+     * REQ-2847: O-, 3 units, Critical, City Blood Bank, Approved
+     * REQ-2846: A+, 2 units, High, Apollo Blood Services, Pending
+     * REQ-2845: B+, 4 units, Critical, Max Blood Center, Pending
+     * REQ-2843: AB+, 2 units, High, Red Cross Blood Center, Approved
+     * REQ-2841: A-, 1 unit, Normal, City Blood Bank, Pending
+   
+   - Nearby Blood Banks:
+     * City Blood Bank (2.3 km)
+       - O-: 18 units
+       - A+: 76 units
+       - B+: 58 units
+       - AB-: 9 units
+       - Response Time: 4 min avg
+     * Apollo Blood Services (4.1 km)
+       - O+: 94 units
+       - A-: 32 units
+       - B-: 12 units
+       - AB+: 45 units
+       - Response Time: 6 min avg
+     * Max Blood Center (1.8 km)
+       - O-: 22 units
+       - A+: 68 units
+       - B+: 41 units
+       - AB-: 15 units
+       - Response Time: 3 min avg
+   
+   - Blood Donation Drives:
+     * "Community Blood Drive" - Sector 21 Community Center - Jan 10, 2026
+     * "Corporate Donation Camp" - Tech Park, Phase 2 - Jan 15, 2026
+   
+   - Create Request Modal:
+     * Blood Group dropdown (A+, A-, B+, B-, AB+, AB-, O+, O-)
+     * Units Required (number input)
+     * Urgency Level (Critical, High, Medium, Low)
+     * Required By (datetime picker)
+     * Patient Details (textarea)
+     * HARDCODED: Shows success message after submit
+
+8. BLOOD BANK DASHBOARD
+   - Stats:
+     * Available Blood Units: "482" (HARDCODED)
+     * Hospital Requests Pending: "8" (HARDCODED)
+   
+   - Schedule Donation Drive:
+     * Drive Name (text input)
+     * Drive Date (date picker)
+     * HARDCODED: Shows success toast after submit
+   
+   - Scheduled Donation Drives:
+     * "Community Blood Drive" - Jan 10, 2026 - 42 registrations
+     * "Corporate Camp - Tech Park" - Jan 15, 2026 - 28 registrations
+
+9. BLOOD BANK INVENTORIES
+   - Blood Inventory Table:
+     * All 8 blood groups listed (O+, O-, A+, A-, B+, B-, AB+, AB-)
+     * Units shown as "-- enter units --" (placeholder)
+   
+   - Platelet Inventory Table:
+     * 3 placeholder rows
+     * Columns: Sr No, Type, Expiry Date
+     * All values are placeholders
+
+10. DRIVE ELIGIBILITY CHECK
+    - Multi-step questionnaire (8 questions):
+      1. Age (18-65 years)
+      2. Weight (>50 kg)
+      3. Alcohol consumption in last 24 hours (must be No)
+      4. Piercing/tattoo in last 12 months (must be No)
+      5. Blood donation in last 3 months (must be No)
+      6. Platelet donation in last 7 days (must be No)
+      7. Pregnant in last 6 months (must be No)
+      8. Currently breastfeeding (must be No)
+    - Progress bar showing completion
+    - Shows eligible/not eligible result
+    - HARDCODED: All validation is client-side only
+
+================================================================================
+                    ALL HARDCODED DATA TO REPLACE
+================================================================================
+
+1. AUTHENTICATION & AUTHORIZATION
+   ============================================
+   File: src/components/LoginScreen.tsx
+   - Line 54-58: Login always succeeds (accepts any credentials)
+   - Replace with: POST /api/auth/login
+   - Request: { role, identifier (phone/ID), password }
+   - Response: { token, user, role }
+
+   File: src/components/DonorRegister.tsx
+   - Line 67-71: Registration simulation
+   - Replace with: POST /api/auth/register/donor
+   - Request: { phone, pincode, password }
+   - Response: { success, message, userId }
+
+   File: src/components/HospitalRegister.tsx
+   - Line 75-79: Registration simulation
+   - Replace with: POST /api/auth/register/hospital
+   - Request: { name, email, address, password }
+   - Response: { success, message, hospitalId }
+
+   File: src/components/BloodBankRegister.tsx
+   - Line 75-79: Registration simulation
+   - Replace with: POST /api/auth/register/blood-bank
+   - Request: { name, email, address, password }
+   - Response: { success, message, bloodBankId }
+
+2. DONOR DASHBOARD DATA
+   ============================================
+   File: src/components/DonorDashboard.tsx
+   
+   Donor Profile (Line 42-44):
+   - User ID: "123456" → GET /api/donor/profile
+   - Blood Group: "A+" → GET /api/donor/profile
+   - Location: "Sector 21, Delhi" → GET /api/donor/profile
+   
+   Upcoming Donation Drives (Line 53-69):
+   - Drive 1: "Community Blood Drive" → GET /api/drives/upcoming
+   - Drive 2: "Corporate Blood Donation Camp" → GET /api/drives/upcoming
+   - Replace with: GET /api/drives/upcoming?location={pincode}
+   - Response: [{ id, title, location, date, time, organizer, status }]
+   
+   Nearby Blood Banks (Line 80-94):
+   - "City Blood Bank" - 2.3 km → GET /api/blood-banks/nearby?location={pincode}
+   - "Apollo Blood Services" - 4.1 km → GET /api/blood-banks/nearby
+   - "Red Cross Blood Center" - 5.8 km → GET /api/blood-banks/nearby
+   - Replace with: GET /api/blood-banks/nearby?lat={lat}&lng={lng}
+   - Response: [{ id, name, distance, status, address, coordinates }]
+   
+   Eligibility Check (DriveEligibilityCheck.tsx):
+   - Line 24-95: Eligibility questions (keep client-side validation)
+   - After validation: POST /api/donor/eligibility-check
+   - Request: { age, weight, alcohol, piercing, bloodDonation, plateletDonation, pregnant, breastfeeding }
+   - Response: { eligible, message, nextDonationDate }
+   - On eligible: POST /api/drives/{driveId}/register
+   - Request: { donorId, driveId }
+   - Response: { success, registrationId }
+
+3. HOSPITAL DASHBOARD DATA
+   ============================================
+   File: src/components/HospitalDashboard.tsx
+   
+   Stats Cards (Line 32-49):
+   - Active Requests: "12" → GET /api/hospital/stats
+   - Pending Approval: "5" → GET /api/hospital/stats
+   - Fulfilled Today: "18" → GET /api/hospital/stats
+   - Response: { activeRequests, pendingApproval, fulfilledToday }
+   
+   Blood Requests Table (Line 74-123):
+   - All 5 request rows → GET /api/hospital/requests
+   - Response: [{ requestId, bloodGroup, units, urgency, bloodBank, status, createdAt }]
+   
+   Nearby Blood Banks (Line 135-170):
+   - All 3 blood banks with availability → GET /api/blood-banks/nearby?hospitalId={id}
+   - Response: [{ id, name, distance, availability: { bloodGroup: units }, responseTime, status }]
+   
+   Donation Drives (Line 184-196):
+   - Both drives → GET /api/drives/upcoming?location={hospitalLocation}
+   - Response: [{ id, title, location, date, time, organizer }]
+   
+   Create Request Modal (Line 200-286):
+   - Submit: POST /api/hospital/requests
+   - Request: { hospitalId, bloodGroup, units, urgency, requiredBy, patientDetails }
+   - Response: { success, requestId, message }
+
+4. BLOOD BANK DASHBOARD DATA
+   ============================================
+   File: src/components/BloodBankDashboard.tsx
+   
+   Stats (Line 37-51):
+   - Available Blood Units: "482" → GET /api/blood-bank/stats
+   - Hospital Requests Pending: "8" → GET /api/blood-bank/stats
+   - Response: { totalUnits, pendingRequests, fulfilledToday }
+   
+   Scheduled Drives (Line 107-116):
+   - Both drives → GET /api/blood-bank/drives
+   - Response: [{ id, title, date, registrations, status }]
+   
+   Schedule Drive (Line 89-94):
+   - Submit: POST /api/blood-bank/drives
+   - Request: { bloodBankId, title, date, location, time }
+   - Response: { success, driveId }
+
+5. BLOOD BANK INVENTORIES DATA
+   ============================================
+   File: src/components/BloodBankInventories.tsx
+   
+   Blood Inventory Table (Line 22-29):
+   - All 8 blood groups → GET /api/blood-bank/inventory/blood
+   - Response: [{ bloodGroup, unitsAvailable, unitsReserved, expiryDates }]
+   
+   Platelet Inventory Table (Line 54-60):
+   - All platelets → GET /api/blood-bank/inventory/platelets
+   - Response: [{ id, type, expiryDate, status }]
+   
+   Update Inventory:
+   - PUT /api/blood-bank/inventory/blood
+   - Request: { bloodGroup, units }
+   - PUT /api/blood-bank/inventory/platelets
+   - Request: { type, expiryDate }
+
+6. NOTIFICATIONS
+   ============================================
+   File: src/components/Dashboard.tsx
+   - Line 211-213: Notification badge count "3" → GET /api/notifications/unread-count
+   - Response: { count }
+   - GET /api/notifications → List of notifications
+
+================================================================================
+                    SAMPLE DATA STRUCTURES
+================================================================================
+
+1. DONOR PROFILE
+   {
+     "userId": "123456",
+     "phone": "9876543210",
+     "bloodGroup": "A+",
+     "location": "Sector 21, Delhi",
+     "pincode": "110021",
+     "name": "John Doe",
+     "email": "john@example.com",
+     "lastDonationDate": "2025-10-15",
+     "totalDonations": 5,
+     "eligibilityStatus": "eligible",
+     "nextEligibleDate": "2026-01-15"
+   }
+
+2. DONATION DRIVE
+   {
+     "id": "drive-001",
+     "title": "Community Blood Drive",
+     "location": "Sector 21 Community Center",
+     "address": "123 Main St, Sector 21, Delhi",
+     "date": "2026-01-10",
+     "time": "09:00-17:00",
+     "organizer": "City Blood Bank",
+     "organizerId": "bb-001",
+     "status": "upcoming",
+     "registrations": 42,
+     "maxCapacity": 100,
+     "bloodGroupsNeeded": ["O+", "A+", "B+"]
+   }
+
+3. BLOOD BANK
+   {
+     "id": "bb-001",
+     "name": "City Blood Bank",
+     "email": "contact@citybloodbank.com",
+     "address": "456 Blood St, Sector 21, Delhi",
+     "coordinates": { "lat": 28.6139, "lng": 77.2090 },
+     "distance": 2.3,
+     "status": "open",
+     "responseTime": "4 min avg",
+     "availability": {
+       "O+": 94,
+       "O-": 18,
+       "A+": 76,
+       "A-": 32,
+       "B+": 58,
+       "B-": 12,
+       "AB+": 45,
+       "AB-": 9
+     }
+   }
+
+4. HOSPITAL REQUEST
+   {
+     "requestId": "REQ-2847",
+     "hospitalId": "hosp-001",
+     "hospitalName": "City Hospital",
+     "bloodGroup": "O-",
+     "units": 3,
+     "urgency": "critical",
+     "status": "approved",
+     "bloodBankId": "bb-001",
+     "bloodBankName": "City Blood Bank",
+     "createdAt": "2026-01-05T10:30:00Z",
+     "requiredBy": "2026-01-05T14:00:00Z",
+     "patientDetails": "Emergency surgery patient"
+   }
+
+5. BLOOD INVENTORY
+   {
+     "bloodBankId": "bb-001",
+     "inventory": [
+       {
+         "bloodGroup": "O+",
+         "unitsAvailable": 94,
+         "unitsReserved": 10,
+         "expiryDates": ["2026-02-15", "2026-02-20"]
+       },
+       {
+         "bloodGroup": "A+",
+         "unitsAvailable": 76,
+         "unitsReserved": 5,
+         "expiryDates": ["2026-02-10", "2026-02-18"]
+       }
+       // ... other blood groups
+     ]
+   }
+
+6. PLATELET INVENTORY
+   {
+     "bloodBankId": "bb-001",
+     "platelets": [
+       {
+         "id": "plt-001",
+         "type": "Single Donor Platelets",
+         "expiryDate": "2026-01-20",
+         "status": "available",
+         "donorId": "123456"
+       },
+       {
+         "id": "plt-002",
+         "type": "Random Donor Platelets",
+         "expiryDate": "2026-01-18",
+         "status": "available",
+         "donorId": "123457"
+       }
+     ]
+   }
+
+7. HOSPITAL STATS
+   {
+     "hospitalId": "hosp-001",
+     "activeRequests": 12,
+     "pendingApproval": 5,
+     "fulfilledToday": 18,
+     "totalRequests": 150,
+     "fulfillmentRate": 0.88
+   }
+
+8. BLOOD BANK STATS
+   {
+     "bloodBankId": "bb-001",
+     "totalUnits": 482,
+     "pendingRequests": 8,
+     "fulfilledToday": 15,
+     "totalDrives": 5,
+     "upcomingDrives": 2
+   }
+
+9. NOTIFICATION
+   {
+     "id": "notif-001",
+     "userId": "123456",
+     "role": "donor",
+     "type": "drive_reminder",
+     "title": "Upcoming Blood Drive",
+     "message": "Your registered drive is tomorrow at 9 AM",
+     "read": false,
+     "createdAt": "2026-01-09T10:00:00Z",
+     "link": "/dashboard/drives/drive-001"
+   }
+
+================================================================================
+                    API ENDPOINTS TO IMPLEMENT
+================================================================================
+
+AUTHENTICATION
+--------------
+POST   /api/auth/login
+POST   /api/auth/register/donor
+POST   /api/auth/register/hospital
+POST   /api/auth/register/blood-bank
+POST   /api/auth/logout
+POST   /api/auth/refresh-token
+POST   /api/auth/forgot-password
+POST   /api/auth/reset-password
+
+DONOR ENDPOINTS
+---------------
+GET    /api/donor/profile
+PUT    /api/donor/profile
+GET    /api/donor/donation-history
+GET    /api/donor/upcoming-drives
+POST   /api/donor/eligibility-check
+POST   /api/donor/drives/:driveId/register
+GET    /api/donor/notifications
+PUT    /api/donor/notifications/:id/read
+
+HOSPITAL ENDPOINTS
+------------------
+GET    /api/hospital/profile
+PUT    /api/hospital/profile
+GET    /api/hospital/stats
+GET    /api/hospital/requests
+POST   /api/hospital/requests
+GET    /api/hospital/requests/:id
+PUT    /api/hospital/requests/:id
+DELETE /api/hospital/requests/:id
+POST   /api/hospital/emergency-mode
+GET    /api/hospital/nearby-blood-banks
+
+BLOOD BANK ENDPOINTS
+--------------------
+GET    /api/blood-bank/profile
+PUT    /api/blood-bank/profile
+GET    /api/blood-bank/stats
+GET    /api/blood-bank/inventory/blood
+PUT    /api/blood-bank/inventory/blood
+GET    /api/blood-bank/inventory/platelets
+POST   /api/blood-bank/inventory/platelets
+PUT    /api/blood-bank/inventory/platelets/:id
+GET    /api/blood-bank/requests
+PUT    /api/blood-bank/requests/:id/approve
+PUT    /api/blood-bank/requests/:id/reject
+GET    /api/blood-bank/drives
+POST   /api/blood-bank/drives
+GET    /api/blood-bank/drives/:id
+PUT    /api/blood-bank/drives/:id
+DELETE /api/blood-bank/drives/:id
+
+COMMON ENDPOINTS
+----------------
+GET    /api/blood-banks/nearby?lat={lat}&lng={lng}
+GET    /api/blood-banks/:id
+GET    /api/drives/upcoming?location={pincode}
+GET    /api/drives/:id
+GET    /api/notifications
+PUT    /api/notifications/:id/read
+PUT    /api/notifications/read-all
+
+================================================================================
+                    FORM VALIDATION RULES
+================================================================================
+
+DONOR REGISTRATION
+------------------
+- Phone: Exactly 10 digits, numeric only
+- Pincode: Exactly 6 digits, numeric only
+- Password: Minimum 6 characters
+- Confirm Password: Must match password
+
+HOSPITAL/BLOOD BANK REGISTRATION
+---------------------------------
+- Name: Minimum 3 characters
+- Email: Valid email format (regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+- Address: Minimum 10 characters
+- Password: Minimum 6 characters
+- Confirm Password: Must match password
+
+LOGIN
+-----
+- Donor: Phone (10 digits) + Password
+- Hospital/Blood Bank: ID (any format) + Password
+
+ELIGIBILITY CHECK
+-----------------
+- Age: 18-65 years
+- Weight: >50 kg
+- Alcohol: Must be "No" (last 24 hours)
+- Piercing/Tattoo: Must be "No" (last 12 months)
+- Blood Donation: Must be "No" (last 3 months)
+- Platelet Donation: Must be "No" (last 7 days)
+- Pregnant: Must be "No" (last 6 months)
+- Breastfeeding: Must be "No"
+
+================================================================================
+                    STATE MANAGEMENT
+================================================================================
+
+CURRENT STATE (App.tsx)
+-----------------------
+- selectedRole: 'donor' | 'blood-bank' | 'hospital' | null
+- isLoggedIn: boolean
+- isRegistering: boolean
+
+TO ADD FOR BACKEND
+------------------
+- user: User object (from login response)
+- token: JWT token
+- refreshToken: Refresh token
+- notifications: Notification[]
+- Use React Context or state management library (Redux/Zustand)
+
+================================================================================
+                    ENVIRONMENT VARIABLES NEEDED
+================================================================================
+
+Create .env file:
+-----------------
+VITE_API_BASE_URL=http://localhost:3000/api
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_key
+VITE_WS_URL=ws://localhost:3000 (for WebSocket)
+
+================================================================================
+                    FILES TO MODIFY FOR BACKEND
+================================================================================
+
+1. src/components/LoginScreen.tsx
+   - Replace setTimeout with fetch API call
+   - Store token in localStorage/sessionStorage
+   - Handle errors
+
+2. src/components/DonorRegister.tsx
+   - Replace setTimeout with fetch API call
+   - Handle registration errors
+   - Show success/error messages
+
+3. src/components/HospitalRegister.tsx
+   - Replace setTimeout with fetch API call
+   - Handle registration errors
+
+4. src/components/BloodBankRegister.tsx
+   - Replace setTimeout with fetch API call
+   - Handle registration errors
+
+5. src/components/DonorDashboard.tsx
+   - Replace all hardcoded data with API calls
+   - Use useEffect to fetch data on mount
+   - Add loading states
+
+6. src/components/HospitalDashboard.tsx
+   - Replace all hardcoded data with API calls
+   - Implement create request functionality
+   - Add real-time updates for requests
+
+7. src/components/BloodBankDashboard.tsx
+   - Replace hardcoded stats with API calls
+   - Implement drive scheduling
+   - Fetch real drive data
+
+8. src/components/BloodBankInventories.tsx
+   - Fetch inventory from API
+   - Implement update functionality
+   - Add form for adding/updating inventory
+
+9. src/components/DriveEligibilityCheck.tsx
+   - Send eligibility check to backend
+   - Register for drive after eligibility confirmed
+
+10. src/App.tsx
+    - Add authentication context
+    - Add token refresh logic
+    - Add protected routes
+
+11. Create new files:
+    - src/api/client.ts (API client with axios/fetch)
+    - src/api/auth.ts (Auth API calls)
+    - src/api/donor.ts (Donor API calls)
+    - src/api/hospital.ts (Hospital API calls)
+    - src/api/bloodBank.ts (Blood Bank API calls)
+    - src/contexts/AuthContext.tsx (Auth context)
+    - src/hooks/useAuth.ts (Auth hook)
+    - src/utils/storage.ts (LocalStorage utilities)
+
+================================================================================
+                    ADDITIONAL FEATURES TO IMPLEMENT
+================================================================================
+
+1. Real-time Updates
+   - WebSocket connection for live updates
+   - Notification system
+   - Request status updates
+
+2. Location Services
+   - Google Maps integration
+   - Geolocation API
+   - Distance calculation
+
+3. Search & Filters
+   - Search blood banks by location
+   - Filter drives by date
+   - Filter requests by status
+
+4. Pagination
+   - Paginate requests list
+   - Paginate drives list
+   - Paginate notifications
+
+5. Error Handling
+   - Global error boundary
+   - API error handling
+   - User-friendly error messages
+
+6. Loading States
+   - Skeleton loaders
+   - Loading spinners
+   - Progress indicators
+
+7. Image Upload
+   - Profile pictures
+   - Document uploads
+   - Drive images
+
+8. Email/SMS Notifications
+   - Registration confirmation
+   - Drive reminders
+   - Request updates
+
+================================================================================
+                    SECURITY CONSIDERATIONS
+================================================================================
+
+1. Authentication
+   - JWT tokens with expiration
+   - Refresh token rotation
+   - Secure password hashing (bcrypt)
+
+2. Authorization
+   - Role-based access control (RBAC)
+   - Route protection
+   - API endpoint protection
+
+3. Data Validation
+   - Server-side validation (don't trust client)
+   - Input sanitization
+   - SQL injection prevention
+
+4. CORS
+   - Configure CORS properly
+   - Whitelist allowed origins
+
+5. Rate Limiting
+   - Prevent brute force attacks
+   - Limit API requests per user
+
+================================================================================
+                    TESTING DATA
+================================================================================
+
+Use these sample values for testing:
+
+DONOR
+-----
+Phone: 9876543210
+Pincode: 110021
+Password: password123
+
+HOSPITAL
+--------
+Name: City Hospital
+Email: hospital@example.com
+Address: 123 Hospital St, Sector 21, Delhi
+Password: password123
+
+BLOOD BANK
+----------
+Name: City Blood Bank
+Email: bloodbank@example.com
+Address: 456 Blood St, Sector 21, Delhi
+Password: password123
+
+================================================================================
+                    SUMMARY
+================================================================================
+
+This is a frontend-only React application with all data hardcoded. To make it 
+functional, you need to:
+
+1. Create a backend API (Node.js/Express, Python/Django, etc.)
+2. Implement all API endpoints listed above
+3. Replace all setTimeout() calls with actual API calls
+4. Replace all hardcoded data with API responses
+5. Add authentication/authorization
+6. Add error handling and loading states
+7. Implement real-time features (WebSocket)
+8. Add location services (Google Maps)
+9. Set up database (PostgreSQL, MongoDB, etc.)
+10. Deploy backend and frontend
+
+All hardcoded data locations are documented above. Search for "HARDCODED" 
+comments in the code or refer to the specific line numbers mentioned.
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
+

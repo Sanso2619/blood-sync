@@ -62,7 +62,7 @@ export function HospitalRegister({ onBack, onRegisterSuccess }: HospitalRegister
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -71,12 +71,36 @@ export function HospitalRegister({ onBack, onRegisterSuccess }: HospitalRegister
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register/hospital', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          address: formData.address,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setErrors({ submit: data.message || 'Registration failed' });
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(false);
       // Redirect to login page
       onRegisterSuccess();
-    }, 1500);
+    } catch (error) {
+      console.error('Registration error:', error);
+      setErrors({ submit: 'Failed to connect to server. Please ensure the backend is running.' });
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -260,6 +284,13 @@ export function HospitalRegister({ onBack, onRegisterSuccess }: HospitalRegister
                 </div>
               )}
             </div>
+
+            {/* Error Message */}
+            {errors.submit && (
+              <div className="p-4 bg-red-900/20 border border-red-900/50 rounded text-red-400 text-sm">
+                {errors.submit}
+              </div>
+            )}
 
             {/* Register Button */}
             <button

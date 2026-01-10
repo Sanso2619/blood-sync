@@ -4,14 +4,90 @@ import {
   Calendar,
   Check,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function BloodBankDashboard() {
   const [showScheduleSuccess, setShowScheduleSuccess] = useState(false);
+  const [driveName, setDriveName] = useState('');
+  const [driveDate, setDriveDate] = useState('');
+  const [driveLocation, setDriveLocation] = useState('');
+  const [driveTime, setDriveTime] = useState('');
+  const [drives, setDrives] = useState<any[]>([]);
+  const [stats, setStats] = useState({ totalUnits: 482, pendingRequests: 8 });
+  const [loading, setLoading] = useState(true);
+  const [bloodBankId, setBloodBankId] = useState<string | null>(null);
 
-  const handleScheduleDrive = () => {
-    setShowScheduleSuccess(true);
-    setTimeout(() => setShowScheduleSuccess(false), 3000);
+  useEffect(() => {
+    // Load user from localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setBloodBankId(user.id);
+    }
+
+    // Fetch drives
+    fetchDrives();
+  }, []);
+
+  const fetchDrives = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/drives/upcoming');
+      const data = await response.json();
+      if (data.success) {
+        // Filter drives for this blood bank
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          const myDrives = data.drives.filter((drive: any) => drive.organizerId === user.id);
+          setDrives(myDrives);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching drives:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleScheduleDrive = async () => {
+    if (!bloodBankId || !driveName || !driveDate) {
+      alert('Please fill in drive name and date');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/blood-bank/drives', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          bloodBankId,
+          title: driveName,
+          date: driveDate,
+          location: driveLocation,
+          time: driveTime || '9:00 AM - 5:00 PM',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setShowScheduleSuccess(true);
+        setTimeout(() => setShowScheduleSuccess(false), 3000);
+        setDriveName('');
+        setDriveDate('');
+        setDriveLocation('');
+        setDriveTime('');
+        // Refresh drives list
+        fetchDrives();
+      } else {
+        alert(data.message || 'Failed to create drive');
+      }
+    } catch (error) {
+      console.error('Error creating drive:', error);
+      alert('Failed to connect to server');
+    }
   };
 
   return (
@@ -71,6 +147,8 @@ export function BloodBankDashboard() {
                 </label>
                 <input
                   type="text"
+                  value={driveName}
+                  onChange={(e) => setDriveName(e.target.value)}
                   placeholder="Enter drive name"
                   className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
                 />
@@ -82,6 +160,34 @@ export function BloodBankDashboard() {
                 </label>
                 <input
                   type="date"
+                  value={driveDate}
+                  onChange={(e) => setDriveDate(e.target.value)}
+                  className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[#a3a3a3] text-xs mb-2 block">
+                  Location (optional)
+                </label>
+                <input
+                  type="text"
+                  value={driveLocation}
+                  onChange={(e) => setDriveLocation(e.target.value)}
+                  placeholder="Enter location"
+                  className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[#a3a3a3] text-xs mb-2 block">
+                  Time (optional)
+                </label>
+                <input
+                  type="text"
+                  value={driveTime}
+                  onChange={(e) => setDriveTime(e.target.value)}
+                  placeholder="e.g., 9:00 AM - 5:00 PM"
                   className="w-full bg-[#0e0e10] border border-white/10 rounded-lg px-4 py-2 text-white"
                 />
               </div>
@@ -103,18 +209,22 @@ export function BloodBankDashboard() {
               Scheduled Donation Drives
             </h2>
 
-            <div className="space-y-4">
-              <DriveItem
-                title="Community Blood Drive"
-                date="Jan 10, 2026"
-                registrations="42"
-              />
-              <DriveItem
-                title="Corporate Camp - Tech Park"
-                date="Jan 15, 2026"
-                registrations="28"
-              />
-            </div>
+            {loading ? (
+              <div className="text-white/60">Loading...</div>
+            ) : drives.length === 0 ? (
+              <div className="text-white/60">No scheduled drives</div>
+            ) : (
+              <div className="space-y-4">
+                {drives.map((drive) => (
+                  <DriveItem
+                    key={drive.id}
+                    title={drive.title}
+                    date={new Date(drive.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    registrations={drive.registrations?.toString() || '0'}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

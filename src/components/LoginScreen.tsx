@@ -45,17 +45,43 @@ export function LoginScreen({ role, onBack, onLoginSuccess, onShowRegister }: Lo
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulate API call - accept any credentials
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          role: role === 'blood-bank' ? 'blood-bank' : role,
+          identifier: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(data.message || 'Invalid credentials');
+        setIsLoading(false);
+        return;
+      }
+
+      // Store user data in localStorage for demo
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('role', role || '');
+      
       setIsLoading(false);
-      // Always succeed and go to dashboard
       onLoginSuccess();
-    }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Failed to connect to server. Please ensure the backend is running.');
+      setIsLoading(false);
+    }
   };
 
   return (
